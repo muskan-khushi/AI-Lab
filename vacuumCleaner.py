@@ -1,11 +1,11 @@
-#defining and initializing variables
+# defining and initializing variables
 gridSize = 5
 dirty = 'D'
 clean = 'C'
 empty = 'E'
 obstacle = 'O'
 
-#function to generate a random grid with clean or dirty or empty cells
+# function to generate a grid with clean or dirty or empty cells
 def generateGrid():
     grid = []
     print("Enter the grid row by row, use 'D' for dirty, 'E' for empty, and 'O' for obstacle.")
@@ -16,17 +16,18 @@ def generateGrid():
                 grid.append(list(row))
                 break
             else:
-                print(f"Invalid input. Please enter a row with {gridSize} characters using only 'D', ' ', or 'O'.")
+                print(f"Invalid input. Please enter a row with {gridSize} characters using only 'D', 'E', or 'O'.")
     return grid
 
-
+# function to display the grid
 def displayGrid(grid):
-  for row in grid:
-    for cell in row:
-      print(cell, end= ' ')
+    for row in grid:
+        for cell in row:
+            print(cell, end=' ')
+        print()
     print()
-  print()
-  
+
+# function for the vacuum cleaner's movement and cleaning
 def vacuumCleaner(grid):
     x = 0 
     y = 0  
@@ -48,12 +49,15 @@ def vacuumCleaner(grid):
 
         moved = False
 
+        # Move right
         if y + 1 < gridSize and grid[x][y + 1] != obstacle and (x, y + 1) not in visited:
             y += 1
             moved = True
+        # Move left
         elif y - 1 >= 0 and grid[x][y - 1] != obstacle and (x, y - 1) not in visited:
             y -= 1
             moved = True
+        # Move down
         elif x + 1 < gridSize and (x + 1, y) not in visited:
             x += 1
             if x % 2 == 0:
@@ -63,18 +67,22 @@ def vacuumCleaner(grid):
             moved = True
 
         if not moved:
-            print("No more valid moves available. Stuck!")
-            break
+            # Check if there are dirty cells left and the cleaner is stuck
+            remaining_dirty_cells = sum(row.count(dirty) for row in grid)
+            if remaining_dirty_cells > 0:
+                print("No more valid moves available. Stuck!")
+                break
 
         displayGrid(grid)
         print(f"Total cleaned grid: {cleanedGrid}\n")
 
+# main function
 def main():
-  grid = generateGrid()
-  print("Initial Grid: ")
-  displayGrid(grid)
+    grid = generateGrid()
+    print("Initial Grid: ")
+    displayGrid(grid)
 
-  vacuumCleaner(grid)
+    vacuumCleaner(grid)
 
 if __name__ == "__main__":
-  main()
+    main()
